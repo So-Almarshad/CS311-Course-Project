@@ -1,22 +1,26 @@
+import java.time.*;
+
 public class Zone implements Comparable<Zone>{
 
     String ID;
     int population;
     double urgency;
-    int distance;
+    double distance;
     int supply; //supply required
-    int winStart;// access window start
-    int winEnd;// access window end
+    LocalDateTime winStart;// access window start
+    LocalDateTime winEnd;// access window end
     double utility;
 
-    public Zone(String ID,int population,double urgency, int distance, int supply, int winStart, int winEnd){
+
+
+    public Zone(String ID,String population,String urgency, String distance, String supply, String winStart, String winEnd){
         this.ID = ID;
-        this.population = population;
-        this.urgency = urgency;
-        this.distance = distance;
-        this.supply = supply;
-        this.winStart = winStart;
-        this.winEnd = winEnd;
+        this.population = Integer.parseInt(population);
+        this.urgency = Double.parseDouble(urgency);
+        this.distance = Double.parseDouble(distance);
+        this.supply = Integer.parseInt(supply);
+        this.winStart = LocalDateTime.parse(winStart);
+        this.winEnd = LocalDateTime.parse(winEnd);
         this.utility = this.ComputeUtility();
     }
 
@@ -28,5 +32,10 @@ public class Zone implements Comparable<Zone>{
     @Override
     public int compareTo(Zone obj){
         return (int)(this.utility-obj.utility);
+    }
+    
+    @Override
+    public String toString(){
+        return "Zone ID:" + this.ID;
     }
 }
