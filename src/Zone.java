@@ -21,6 +21,7 @@ public class Zone implements Comparable<Zone>{
         this.supply = Integer.parseInt(supply);
         this.winStart = LocalDateTime.parse(winStart);
         this.winEnd = LocalDateTime.parse(winEnd);
+        this.utility = this.ComputeUtility();
     }
 
     public double ComputeUtility() {
