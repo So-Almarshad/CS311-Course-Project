@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) {
         PriorityQueue<Zone> heap = loadData();
-        System.out.println(heap.poll().winStart.getDayOfMonth());
+        
        
     }
     
