@@ -67,40 +67,56 @@ public class Main {
         
         // starting clock (update to match first window start)
         LocalDateTime currentTime = getEarliestStartTime(heap);
+
+        // Create a temporary waiting room for zones that aren't open yet
+        ArrayList<Zone> waitingRoom = new ArrayList<>();
         
         System.out.println("--- STARTING GREEDY ---");
+
+        
 
         while (!heap.isEmpty()) {
             Zone currentZone = heap.poll(); // get highest utility
             
-            // time math (1 km = 1 min)
             long driveMinutes = (long) currentZone.distance;
             LocalDateTime arrivalTime = currentTime.plusMinutes(driveMinutes);
-            
-            // wait if arrived early
-            LocalDateTime startServiceTime = arrivalTime;
+             
             if (arrivalTime.isBefore(currentZone.winStart)) {
-                startServiceTime = currentZone.winStart;
+                waitingRoom.add(currentZone); // Put it in the waiting room
+            } else {
+                // The gate is open! Let's check if it's feasible.
+                LocalDateTime returnTime = arrivalTime.plusMinutes(driveMinutes);
+                boolean hasCapacity = currentZone.supply <= remainingCapacity;
+                boolean hasDistance = (currentZone.distance * 2) <= remainingDistance;
+                boolean windowValid = !arrivalTime.isAfter(currentZone.winEnd); 
+                
+                if (hasCapacity && hasDistance && windowValid) {
+                    // Visit the zone!
+                    remainingCapacity -= currentZone.supply;
+                    remainingDistance -= (currentZone.distance * 2);
+                    totalUtility += currentZone.utility;
+                    currentTime = returnTime; 
+                    zonesVisited++;
+                    
+                    System.out.println("Visited: " + currentZone.ID + " | Return: " + currentTime);
+                    
+                    // Since time moved forward, zones in the waiting room might be open now!
+                    heap.addAll(waitingRoom);
+                    waitingRoom.clear();
+                }
             }
             
-            // return to depot
-            LocalDateTime returnTime = startServiceTime.plusMinutes(driveMinutes);
-
-            // feasibility checks
-            boolean hasCapacity = currentZone.supply <= remainingCapacity;
-            boolean hasDistance = (currentZone.distance * 2) <= remainingDistance;
-            boolean windowValid = !arrivalTime.isAfter(currentZone.winEnd); 
-            
-            if (hasCapacity && hasDistance && windowValid) {
-                // visit zone
-                remainingCapacity -= currentZone.supply;
-                remainingDistance -= (currentZone.distance * 2);
-                totalUtility += currentZone.utility;
-                currentTime = returnTime; 
-                zonesVisited++;
+            if (heap.isEmpty() && !waitingRoom.isEmpty()) {
+                Zone nextToOpen = waitingRoom.get(0);
+                for (Zone z : waitingRoom) {
+                    if (z.winStart.isBefore(nextToOpen.winStart)) {
+                        nextToOpen = z;
+                    }
+                }
                 
-                // basic println formatting
-                System.out.println("Visited: " + currentZone.ID + " | Utility: " + currentZone.utility + " | Return: " + currentTime);
+                currentTime = nextToOpen.winStart.minusMinutes((long) nextToOpen.distance);
+                heap.addAll(waitingRoom);
+                waitingRoom.clear();
             }
         }
         
