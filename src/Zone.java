@@ -13,7 +13,7 @@ public class Zone implements Comparable<Zone>{
 
 
 
-    public Zone(String ID, String population, String urgency, String distance, String supply, String winStart, String winEnd, double totalC, double totalD) {
+    public Zone(String ID, String population, String urgency, String distance, String supply, String winStart, String winEnd) {
         this.ID = ID;
         this.population = Integer.parseInt(population);
         this.urgency = Double.parseDouble(urgency);
@@ -21,11 +21,16 @@ public class Zone implements Comparable<Zone>{
         this.supply = Integer.parseInt(supply);
         this.winStart = LocalDateTime.parse(winStart);
         this.winEnd = LocalDateTime.parse(winEnd);
-        this.utility = this.ComputeUtility(totalC, totalD); 
     }
 
-    public double ComputeUtility(double C, double D) {
+    public double ComputeUtility() {
+        double C = 11001.0;
+        double D = 62733.0;
+        
+        // Cost percentage based on round-trip distance
         double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
+        
+        // Resource-Consumption Hybrid Score
         return (this.population * this.urgency) / costPercentage;
     }
 
