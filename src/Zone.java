@@ -37,7 +37,7 @@ public class Zone implements Comparable<Zone>{
 
     @Override
     public int compareTo(Zone obj) {
-        // FIX: Use Double.compare and reverse the order (obj vs this) 
+        // Fix: Use Double.compare and reverse the order (obj vs this) 
         // to make the PriorityQueue a Max-Heap
         return Double.compare(obj.utility, this.utility);
     }
