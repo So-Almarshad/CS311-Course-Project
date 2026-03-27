@@ -26,8 +26,9 @@ public class Zone implements Comparable<Zone>{
     }
 
     public double ComputeUtility() {
-        double C = 12452.0;
-        double D = 59542.7;
+        double C = 12452.0; // Total capacity needed to supoly all zones
+        double D = 59542.7; // Total round-trip distance to all zones
+        
         
         double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
         
