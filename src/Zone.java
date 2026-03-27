@@ -29,7 +29,7 @@ public class Zone implements Comparable<Zone>{
         double C = 12452.0;
         double D = 59542.7;
         
-        double costPercentage = (this.supply / C) + (23*(this.distance * 2.0) / D);
+        double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
         
         return (this.population * this.urgency) / costPercentage;
     }
