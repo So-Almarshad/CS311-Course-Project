@@ -13,9 +13,16 @@ public class Main {
     public static void main(String[] args) {
         PriorityQueue<Zone> heap = loadData();
         
+        
         if (heap != null && !heap.isEmpty()) {
-            runGreedy(heap);
-        }
+            long startTime = System.currentTimeMillis();
+            
+            runGreedy(heap); 
+            
+            long endTime = System.currentTimeMillis(); 
+            
+            System.out.println("Execution Time: " + (endTime - startTime) + " ms");        }
+   
     }
     
     public static PriorityQueue<Zone> loadData() {
@@ -41,7 +48,6 @@ public class Main {
     public static LocalDateTime getEarliestStartTime(PriorityQueue<Zone> heap) {
         LocalDateTime earliest = null;
         
-        // loop through all zones to find the earliest time
         for (Zone z : heap) {
             if (earliest == null || z.winStart.isBefore(earliest)) {
                 earliest = z.winStart;
@@ -52,6 +58,8 @@ public class Main {
     }
 
     public static void runGreedy(PriorityQueue<Zone> heap) {
+        
+        
 
         int totalSupplies = 0;
         double totalDistance = 0.0;
@@ -59,17 +67,14 @@ public class Main {
         
         for (Zone z : heap) {
             totalSupplies += z.supply;
-            totalDistance += (z.distance * 2); 
+            totalDistance += (z.distance * 2); // Round-trip distance
             maxPossibleUtility += z.utility;
         }
-        
-        int remainingCapacity = (int) (totalSupplies * 1);
-        double remainingDistance = totalDistance * 1;
+       
         double totalUtility = 0.0;
         int zonesVisited = 0;
         
         LocalDateTime currentTime = getEarliestStartTime(heap);
-        
         ArrayList<Zone> waitingRoom = new ArrayList<>();
         
         int totalSuppliesDelivered = 0;
@@ -77,10 +82,9 @@ public class Main {
         
         System.out.println("--- STARTING GREEDY ---");
 
-        
+        Truck truck = new Truck(totalSupplies, totalDistance);
 
         while (!heap.isEmpty()) {
-            // get highest utility
             Zone currentZone = heap.poll(); 
             
             long driveMinutes = (long) currentZone.distance;
@@ -89,25 +93,22 @@ public class Main {
             if (arrivalTime.isBefore(currentZone.winStart)) {
                 waitingRoom.add(currentZone);
             } else {
-                // Gate is open. Check if it's feasible.
                 LocalDateTime returnTime = arrivalTime.plusMinutes(driveMinutes);
-                boolean hasCapacity = currentZone.supply <= remainingCapacity;
-                boolean hasDistance = (currentZone.distance * 2) <= remainingDistance;
+                
+                double roundTrip = currentZone.distance * 2;
                 boolean windowValid = !arrivalTime.isAfter(currentZone.winEnd); 
                 
-                if (hasCapacity && hasDistance && windowValid) {
-                    // Visit the zone!
-                    remainingCapacity -= currentZone.supply;
-                    remainingDistance -= (currentZone.distance * 2);
+                if (truck.canMakeTrip(currentZone.supply, roundTrip) && windowValid) {
+                    truck.deliver(currentZone.supply, roundTrip);
                     totalUtility += currentZone.utility;
                     currentTime = returnTime; 
                     zonesVisited++;
                     totalSuppliesDelivered += currentZone.supply;
-                    totalDistanceDriven += (currentZone.distance * 2);
+                    totalDistanceDriven += roundTrip;
                     
                     System.out.println("Visited: " + currentZone.ID + 
                                        " | Delivered: " + currentZone.supply + 
-                                       " | Round-Trip: " + (currentZone.distance * 2) + " km" +
+                                       " | Round-Trip: " + roundTrip + " km" +
                                        " | Return: " + currentTime);
                     
                     heap.addAll(waitingRoom);
@@ -131,12 +132,16 @@ public class Main {
         
         double utilityScore = (totalUtility / maxPossibleUtility) * 100.0;
         
-        double roundedScore = Math.round(utilityScore * 100.0) / 100.0;
-        double roundedDistance = Math.round(totalDistanceDriven * 100.0) / 100.0;
 
         System.out.println("\n--- RESULTS ---");
         System.out.println("Visited: " + zonesVisited + " out of 120 zones");
-        System.out.println("Utility Score: " + roundedScore + " / 100");
+        System.out.printf("Utility Score: %.2f / 100\n", utilityScore);
         System.out.println("Total Supplies Delivered: " + totalSuppliesDelivered + " / " + totalSupplies);
-        System.out.println("Total Distance Driven: " + roundedDistance + " km");    }
+        System.out.printf("Total Distance Driven: %.2f km\n", totalDistanceDriven);  
+        System.out.println("Remaining supplies: " + truck.currentSupplies);
+        System.out.println("Remaining range: " + truck.remainingRange);
+
+    }
+    
+    
 }
