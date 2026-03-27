@@ -25,13 +25,11 @@ public class Zone implements Comparable<Zone>{
     }
 
     public double ComputeUtility() {
-        double C = 11001.0;
-        double D = 62733.0;
+        double C = 12452.0;
+        double D = 59542.7;
         
-        // Cost percentage based on round-trip distance
         double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
         
-        // Resource-Consumption Hybrid Score
         return (this.population * this.urgency) / costPercentage;
     }
 
