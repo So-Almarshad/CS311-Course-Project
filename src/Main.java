@@ -86,7 +86,7 @@ public class Main {
 
         while (!heap.isEmpty()) {
             Zone currentZone = heap.poll(); 
-            
+            // Assumed constant speed. 1 km = 1 min (60 km/h)
             long driveMinutes = (long) currentZone.distance;
             LocalDateTime arrivalTime = currentTime.plusMinutes(driveMinutes);
             
