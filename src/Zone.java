@@ -24,14 +24,21 @@ public class Zone implements Comparable<Zone>{
         this.utility = this.ComputeUtility();
     }
 
-    public double ComputeUtility(){
-        //return this.population*this.urgency;
-        return Math.pow(this.population*this.urgency,2)/distance;
+    public double ComputeUtility() {
+        double C = 12452.0; // Total capacity needed to supoly all zones
+        double D = 59542.7; // Total round-trip distance to all zones
+        
+        
+        double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
+        
+        return (this.population * this.urgency) / costPercentage;
     }
 
     @Override
-    public int compareTo(Zone obj){
-        return (int)(this.utility-obj.utility);
+    public int compareTo(Zone obj) {
+        // Fix: Use Double.compare and reverse the order (obj vs this) 
+        // to make the PriorityQueue a Max-Heap
+        return Double.compare(obj.utility, this.utility);
     }
     
     @Override
