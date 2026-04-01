@@ -1,9 +1,9 @@
 public class Truck {
     int capacity;
     double totRange;
-
     int currentSupplies;
     double remainingRange;
+
 
     public Truck(int capacity, double totRange) {
         this.capacity = capacity;
