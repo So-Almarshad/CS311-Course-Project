@@ -22,22 +22,22 @@ public class Zone implements Comparable<Zone>{
         this.winStart = LocalDateTime.parse(winStart);
         this.winEnd = LocalDateTime.parse(winEnd);
         this.utility = this.ComputeUtility();
-        // Assumed distance = time 
     }
 
     public double ComputeUtility() {
-        double C = 12452.0; // Total capacity needed to supoly all zones
-        double D = 59542.7; // Total round-trip distance to all zones
+        double C = 12452.0;
+        double D = 59542.7;
         
+        // Cost percentage based on round-trip distance
+        double costPercentage = (this.supply / C) + (23*(this.distance * 2.0) / D);
         
-        double costPercentage = (this.supply / C) + ((this.distance * 2.0) / D);
-        
+        // Resource-Consumption Hybrid Score
         return (this.population * this.urgency) / costPercentage;
     }
 
     @Override
     public int compareTo(Zone obj) {
-        // Fix: Use Double.compare and reverse the order (obj vs this) 
+        // FIX: Use Double.compare and reverse the order (obj vs this) 
         // to make the PriorityQueue a Max-Heap
         return Double.compare(obj.utility, this.utility);
     }
