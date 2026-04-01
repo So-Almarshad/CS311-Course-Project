@@ -4,6 +4,7 @@ public class Truck {
     int currentSupplies;
     double remainingRange;
 
+
     public Truck(int capacity, double totRange) {
         this.capacity = capacity;
         this.totRange = totRange;

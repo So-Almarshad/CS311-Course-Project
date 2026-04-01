@@ -13,7 +13,7 @@ public class Zone implements Comparable<Zone>{
 
 
 
-    public Zone(String ID,String population,String urgency, String distance, String supply, String winStart, String winEnd){
+    public Zone(String ID, String population, String urgency, String distance, String supply, String winStart, String winEnd) {
         this.ID = ID;
         this.population = Integer.parseInt(population);
         this.urgency = Double.parseDouble(urgency);
@@ -22,6 +22,7 @@ public class Zone implements Comparable<Zone>{
         this.winStart = LocalDateTime.parse(winStart);
         this.winEnd = LocalDateTime.parse(winEnd);
         this.utility = this.ComputeUtility();
+        // Assumed distance = time 
     }
 
     public double ComputeUtility() {
