@@ -106,10 +106,7 @@ public class Main {
                     totalSuppliesDelivered += currentZone.supply;
                     totalDistanceDriven += roundTrip;
                     
-                    System.out.println("Visited: " + currentZone.ID + 
-                                       " | Delivered: " + currentZone.supply + 
-                                       " | Round-Trip: " + roundTrip + " km" +
-                                       " | Return: " + currentTime);
+                    //System.out.println("Visited: " + currentZone.ID +  " | Delivered: " + currentZone.supply + " | Round-Trip: " + roundTrip + " km" +" | Return: " + currentTime);
                     
                     heap.addAll(waitingRoom);
                     waitingRoom.clear();
@@ -134,12 +131,12 @@ public class Main {
         
 
         System.out.println("\n--- RESULTS ---");
-        System.out.println("Visited: " + zonesVisited + " out of 120 zones");
+        //System.out.println("Visited: " + zonesVisited + " out of 120 zones");
         System.out.printf("Utility Score: %.2f / 100\n", utilityScore);
-        System.out.println("Total Supplies Delivered: " + totalSuppliesDelivered + " / " + totalSupplies);
-        System.out.printf("Total Distance Driven: %.2f km\n", totalDistanceDriven);  
-        System.out.println("Remaining supplies: " + truck.currentSupplies);
-        System.out.println("Remaining range: " + truck.remainingRange);
+        //System.out.println("Total Supplies Delivered: " + totalSuppliesDelivered + " / " + totalSupplies);
+        //System.out.printf("Total Distance Driven: %.2f km\n", totalDistanceDriven);  
+        //System.out.println("Remaining supplies: " + truck.currentSupplies);
+        //System.out.println("Remaining range: " + truck.remainingRange);
 
     }
     
