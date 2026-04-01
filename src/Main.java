@@ -10,21 +10,17 @@ import java.time.*;
 
 public class Main {
     public static void main(String[] args) {
+        PriorityQueue<Zone> heap = loadData();
+        long startTime = System.currentTimeMillis();          
+        runGreedy(heap);            
+        long endTime = System.currentTimeMillis();     
+        System.out.println("Execution Time: " + (endTime - startTime) + " ms\n");
+
         ArrayList<Zone> list = listLoadData();
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         DynamicProgramming(list);
-        long endTime = System.currentTimeMillis(); 
+        endTime = System.currentTimeMillis(); 
         System.out.println("DP Execution Time: " + (endTime - startTime) + " ms");
-        
-        
-        if (heap != null && !heap.isEmpty()) {
-            long startTime = System.currentTimeMillis();
-            
-            runGreedy(heap); 
-            
-            long endTime = System.currentTimeMillis(); 
-            
-            System.out.println("Execution Time: " + (endTime - startTime) + " ms");        }
    
     }
     
@@ -73,13 +69,13 @@ public class Main {
         }
        
         double totalUtility = 0.0;
-        int zonesVisited = 0;
+        //int zonesVisited = 0;
         
         LocalDateTime currentTime = getEarliestStartTime(heap);
         ArrayList<Zone> waitingRoom = new ArrayList<>();
         
-        int totalSuppliesDelivered = 0;
-        double totalDistanceDriven = 0.0;
+        //int totalSuppliesDelivered = 0;
+        //double totalDistanceDriven = 0.0;
         
         System.out.println("--- STARTING GREEDY ---");
 
@@ -103,9 +99,9 @@ public class Main {
                     truck.deliver(currentZone.supply, roundTrip);
                     totalUtility += currentZone.utility;
                     currentTime = returnTime; 
-                    zonesVisited++;
-                    totalSuppliesDelivered += currentZone.supply;
-                    totalDistanceDriven += roundTrip;
+                    //zonesVisited++;
+                    //totalSuppliesDelivered += currentZone.supply;
+                    //totalDistanceDriven += roundTrip;
                     
                     //System.out.println("Visited: " + currentZone.ID +  " | Delivered: " + currentZone.supply + " | Round-Trip: " + roundTrip + " km" +" | Return: " + currentTime);
                     
@@ -131,7 +127,7 @@ public class Main {
         double utilityScore = (totalUtility / maxPossibleUtility) * 100.0;
         
 
-        System.out.println("\n--- RESULTS ---");
+        System.out.println("--- RESULTS ---");
         //System.out.println("Visited: " + zonesVisited + " out of 120 zones");
         System.out.printf("Utility Score: %.2f / 100\n", utilityScore);
         //System.out.println("Total Supplies Delivered: " + totalSuppliesDelivered + " / " + totalSupplies);
@@ -140,9 +136,7 @@ public class Main {
         //System.out.println("Remaining range: " + truck.remainingRange);
 
     }
-    
-    
-    }    
+       
 
     public static ArrayList<Zone> listLoadData(){
         try {
@@ -161,6 +155,7 @@ public class Main {
             return null;
         }
     }
+
 
     public static double DynamicProgramming(ArrayList<Zone> list){
         /*
@@ -193,6 +188,7 @@ public class Main {
                     LocalDateTime winStart = list.get(zone).winStart;
                     LocalDateTime winEnd = list.get(zone).winEnd;
                     int timeToVisit = (int) Math.ceil(currentDistance/60);
+
                     if (zone==0){// fill first column
                         if (currentDistance <= distance & currentSupply <= supply){
                             benefit[zone][distance][supply] = currentUtility;
@@ -215,10 +211,12 @@ public class Main {
             }
             }
         }
-       double utilityScore = (benefit[numZones-1][maxDistance-1][maxSupply-1] / maxPossibleUtility) * 100.0;
-        System.out.println("\n--- RESULTS ---");
-        System.out.printf("Utility Score: %.2f / 100\n", utilityScore);
+        double utilityScore = (benefit[numZones-1][maxDistance-1][maxSupply-1] / maxPossibleUtility) * 100.0;
+        System.out.println("--- RESULTS ---");
+        System.out.printf("Utility Score: %.2f / 100\n", utilityScore*100);
         return benefit[numZones-1][maxDistance-1][maxSupply-1];
-        
     }
+    
+
+
 }
