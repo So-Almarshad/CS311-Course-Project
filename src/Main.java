@@ -178,18 +178,16 @@ public class Main {
         System.out.println("--- STARTING DYNAMIC PROGRAMMING ---");
         
         // Sort zones by earliest start time
-        list.sort((z1, z2) -> z1.winStart.compareTo(z2.winStart));
-        
-        LocalDateTime globalStartTime = list.get(0).winStart;
         
         
-        int DISTANCE_CHUNK = 500;
-        int TIME_CHUNK_HOURS = 6; // Time chunks of 6 hours
-        
-        int maxDistanceChunks = (int) Math.ceil(maxRange / DISTANCE_CHUNK) + 1;
         int maxCapacityInt = (int) Math.ceil(maxCapacity);
-        
+
+        int DISTANCE_CHUNK = 500;
+        int maxDistanceChunks = (int) Math.ceil(maxRange / DISTANCE_CHUNK);
+
         // Calculate total time window span
+        list.sort((z1, z2) -> z1.winStart.compareTo(z2.winStart));
+        LocalDateTime globalStartTime = list.get(0).winStart;
         LocalDateTime latestEnd = list.get(0).winEnd;
         for (Zone zone : list) {
             if (zone.winEnd.isAfter(latestEnd)) {
@@ -197,14 +195,16 @@ public class Main {
             }
         }
         long totalHours = java.time.temporal.ChronoUnit.HOURS.between(globalStartTime, latestEnd);
-        int maxTimeChunks = (int) Math.ceil((double) totalHours / TIME_CHUNK_HOURS) + 1;
+
+        int TIME_CHUNK_HOURS = 6; // Time chunks of 6 hours
+        int maxTimeChunks = (int) Math.ceil((double) totalHours / TIME_CHUNK_HOURS);
         
         System.out.println("Discretizing: maxCapacity=" + maxCapacityInt + 
                         ", maxDistanceChunks=" + maxDistanceChunks +
                         ", maxTimeChunks=" + maxTimeChunks);
         
         // DP[supply][distance_chunk][time_chunk] = maximum utility
-        double[][][] dp = new double[maxCapacityInt + 1][maxDistanceChunks][maxTimeChunks];
+        double[][][] dp = new double[maxCapacityInt + 1][maxDistanceChunks + 1][maxTimeChunks + 1];
         
         // Initialize with -1 (unreachable)
         for (int s = 0; s <= maxCapacityInt; s++) {
@@ -231,8 +231,8 @@ public class Main {
             
             // Traverse backwards to avoid using same zone twice
             for (int s = maxCapacityInt; s >= zoneSupply; s--) {
-                for (int d = maxDistanceChunks - 1; d >= zoneDistanceChunks; d--) {
-                    for (int t = maxTimeChunks - 1; t >= 0; t--) {
+                for (int d = maxDistanceChunks; d >= zoneDistanceChunks; d--) {
+                    for (int t = maxTimeChunks; t >= 0; t--) {
                         
                         if (dp[s - zoneSupply][d - zoneDistanceChunks][t] >= 0) {
                             // Calculate current time from time chunk
@@ -243,7 +243,7 @@ public class Main {
                             LocalDateTime arrivalTime = currentTime.plusMinutes(travelMinutes);
                             LocalDateTime departureTime = arrivalTime.plusMinutes(travelMinutes);
                             
-                            // Check if arrival is within access window
+                            // Check if arrival is within access window, written this way to be have an inclusive range
                             if (!arrivalTime.isBefore(winStart) && !arrivalTime.isAfter(winEnd)) {
                                 
                                 // Calculate time chunk for departure
@@ -286,8 +286,5 @@ public class Main {
         System.out.printf("Maximum Possible Utility: %.2f\n", maxPossibleUtility);
         
         return maxUtility;
-}
-    
-
-
+    }
 }
