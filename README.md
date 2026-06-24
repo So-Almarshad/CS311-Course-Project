@@ -1,4 +1,4 @@
-##Algorithms Analysis and Design Course Project
+## Algorithms Analysis and Design Course Project
 
 In this repo Ahmed and I were tasked with solving a truck scheduling problem using two algorithms.
 
