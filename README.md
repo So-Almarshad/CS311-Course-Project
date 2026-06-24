@@ -1,18 +1,8 @@
-## Getting Started
+##Algorithms Analysis and Design Course Project
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+In this repo Ahmed and I were tasked with solving a truck scheduling problem using two algorithms.
 
-## Folder Structure
+each algorithm varies design, one is designed to be a greedy algorithm, and the other is designed based on dynamic programming.
 
-The workspace contains two folders by default, where:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+The main goal is to compare between both algorithims, more details are in the documentation.
